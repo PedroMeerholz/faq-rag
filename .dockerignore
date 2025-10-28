@@ -1,0 +1,19 @@
+# Ambiente virtual local
+venv/
+.venv/
+
+# Caches do Python
+__pycache__/
+*.pyc
+
+# Caches e arquivos de IDE
+.vscode/
+.idea/
+.DS_Store
+
+# Modelos locais
+*.bin
+*.gguf
+
+# Arquivos de ambiente
+.env
