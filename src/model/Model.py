@@ -5,9 +5,6 @@ from langchain_groq import ChatGroq
 from src.model.Prompt import Prompt
 
 
-load_dotenv()
-
-
 class Model:
     def __init__(self):
         load_dotenv()
