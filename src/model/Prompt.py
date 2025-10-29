@@ -6,12 +6,15 @@ class Prompt:
         self.system_prompt = ChatPromptTemplate.from_messages(
             [
                 (
-                    "system", 
-                    "Responda de forma clara e objetiva às perguntas dos usuários."
+                    "system", """
+                        Responda de forma clara e objetiva às perguntas dos usuários. 
+                        Utilize somente as seguintes informações:
+
+                        {context}
+                    """
                 ),
                 (
-                    "human", 
-                    "{input}"
+                    "human", "{question}"
                 )
             ]
         )
