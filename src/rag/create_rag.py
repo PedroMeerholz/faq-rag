@@ -9,8 +9,8 @@ from langchain_community.document_loaders import DirectoryLoader, PyPDFLoader
 load_dotenv()
 docs_path = os.environ['DOCUMENTS_PATH']
 rag_path = os.environ['RAG_PATH']
+embedding_model = os.environ['EMBEDDING_MODEL']
 
-embedding_model = "BAAI/bge-base-en-v1.5"
 embeddings = HuggingFaceEmbeddings(model=embedding_model)
 
 loader = DirectoryLoader(docs_path, glob="**/*.pdf", loader_cls=PyPDFLoader)

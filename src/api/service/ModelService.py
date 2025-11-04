@@ -21,5 +21,3 @@ class ModelService:
         answer = model_response.content
         # response_metadata = model_response.response_metadata # Will be used to monitoring
         return AIResponseModel(answer=answer)
-        # return model_response
-
