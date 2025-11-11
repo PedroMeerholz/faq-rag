@@ -17,7 +17,6 @@ class ModelService:
 
     def ask(self, question: AskModel):
         model_response = self.chain.invoke(question.question)
-        print(model_response)
         answer = model_response.content
         # response_metadata = model_response.response_metadata # Will be used to monitoring
         return AIResponseModel(answer=answer)

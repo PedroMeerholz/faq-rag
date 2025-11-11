@@ -1,10 +1,10 @@
 import os
 from dotenv import load_dotenv
 from fastapi import UploadFile
-from langchain_community.vectorstores import FAISS
+from langchain_pinecone import PineconeVectorStore
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_text_splitters import CharacterTextSplitter
-from langchain_community.document_loaders import DirectoryLoader, PyPDFLoader
+from langchain_community.document_loaders import PyPDFLoader
 
 
 class RagService:
@@ -16,6 +16,8 @@ class RagService:
 
         embedding_model = os.environ['EMBEDDING_MODEL']
         self.embeddings = HuggingFaceEmbeddings(model=embedding_model)
+
+        self.chunck_size = 1000
     
 
     async def add_document(self, document: UploadFile):
@@ -25,14 +27,21 @@ class RagService:
                 content = await document.read()
                 new_file.write(content)
 
-            loader = DirectoryLoader(self.documents_path, glob="**/*.pdf", loader_cls=PyPDFLoader)
-            documents = loader.load()
+            loader = PyPDFLoader(file_name)
+            new_document = loader.load()
 
-            chunck_size = 1000
-            text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=chunck_size*0.15)
-            documents = text_splitter.split_documents(documents)
+            text_splitter = CharacterTextSplitter(
+                chunk_size=self.chunck_size, 
+                chunk_overlap=self.chunck_size*0.15
+            )
+            new_document = text_splitter.split_documents(new_document)
 
-            vectorstore = FAISS.from_documents(documents, self.embeddings)
-            vectorstore.save_local(self.rag_path)
+            index_name = os.environ['PINECONE_INDEX_NAME']
+            vectorstore = PineconeVectorStore(
+                index_name=index_name,
+                embedding=self.embeddings
+            )
+
+            vectorstore.add_documents(new_document)
         except Exception as e:
             return {"error": str(e)}
